@@ -1,0 +1,27 @@
+.pagination {
+  display: flex;
+  list-style: none;
+  outline: none;
+  align-items: center;
+}
+
+.pagination .page-number.active {
+  @apply bg-[#0054A6] text-[#FFF] font-semibold py-[1px] cursor-pointer hover:bg-[#0054A6] hover:text-[#FFF] hover:py-[1px] rounded-md text-center;
+}
+
+.pagination .page-number {
+  @apply text-['#000'] font-semibold mx-2 px-[10px] py-[1px] cursor-pointer hover:bg-[#0054A6] hover:text-[#FFF] hover:px-[10px] hover:py-[1px] rounded-md text-center;
+}
+
+.pagination .previous.disabled .page-number {
+  @apply text-[#E0E0E0] font-semibold cursor-not-allowed hover:text-[#E0E0E0] hover:bg-[unset]  rounded-md text-center;
+}
+
+.pagination .next.disabled .page-number {
+  @apply text-[#E0E0E0] font-semibold cursor-not-allowed hover:text-[#E0E0E0] hover:bg-[unset]  rounded-md text-center;
+}
+
+.pagination .next .page-number,
+.previous .page-number {
+  @apply text-['#000'] font-semibold mx-2 px-[10px] py-[1px] cursor-pointer hover:bg-[#0054A6] hover:text-[#FFF] hover:px-[10px] hover:py-[1px] rounded-md text-center;
+}

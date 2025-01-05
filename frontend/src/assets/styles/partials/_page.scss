@@ -1,0 +1,27 @@
+.sc-master-limit {
+  .action-column {
+    min-width: 100px;
+    max-width: 100px;
+    &:before {
+      content: '\00a0';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: -1px;
+      bottom: 0;
+      left: -1px;
+      z-index: -1;
+      border-left: 1px solid #e0e0e0;
+      border-right: 1px solid #e0e0e0;
+    }
+    &:last-child {
+      right: 0;
+    }
+    &:nth-last-child(2) {
+      right: 100px;
+    }
+    &:nth-last-child(3) {
+      right: 200px;
+    }
+  }
+}

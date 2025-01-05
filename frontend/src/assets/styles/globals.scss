@@ -2,14 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './partials/input';
-@import './partials/pagination';
-@import './partials/table';
-@import './partials/page';
+@import "./partials/input";
+@import "./partials/pagination";
+@import "./partials/table";
+@import "./partials/page";
 
 @layer base {
   body {
-    font-family: 'var(--font-inter)', sans-serif;
+    font-family: "var(--font-inter)", sans-serif;
   }
 
   input:-webkit-autofill,

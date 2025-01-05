@@ -1,0 +1,27 @@
+input,
+textarea,
+input::placeholder {
+	@apply text-sm;
+}
+
+.input-prefix {
+	span:first-child {
+		@apply bg-accent h-[42px] px-2 rounded-l-md flex items-center justify-center text-white mt-1;
+	}
+
+	input {
+		border-top-left-radius: 0 !important;
+		border-bottom-left-radius: 0 !important;
+	}
+}
+
+.input-suffix {
+	span:last-child {
+		@apply bg-accent h-[42px] px-2 rounded-r-md flex items-center justify-center text-white mt-1;
+	}
+
+	input {
+		border-top-right-radius: 0 !important;
+		border-bottom-right-radius: 0 !important;
+	}
+}

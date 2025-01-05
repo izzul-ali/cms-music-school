@@ -10,6 +10,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { queryClient } from "@/utils/config/queryClient"
 import { theme } from "@/utils/config/theme"
 
+/**
+ * Contains all the providers needed globally
+ */
 export default function ContainerProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
