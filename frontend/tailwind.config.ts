@@ -6,6 +6,7 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  important: true,
   theme: {
     extend: {
       fontFamily: {
@@ -17,6 +18,7 @@ const config: Config = {
         primarySurface: "#EDF1FF",
         secondarySurface: "#EDF1FF",
         menuColor: "#142043",
+        accent: "#00336C",
         error: "#FF0000",
         cardBg: "rgba(255,255,255, 0.65)",
         buttonLogin: "#3366FF",

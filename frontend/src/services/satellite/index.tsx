@@ -1,18 +1,18 @@
-import { ACCESS_TOKEN } from "@interfaces/auth"
-import { APIKey } from "@utils/environment"
+"use server"
+
+import { ACCESS_TOKEN } from "@/interfaces/auth"
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
 import { cookies } from "next/headers"
 
+// axios global configuration used for custom api calls from the server
 const satellite = axios.create({
-  headers: {
-    "Content-Type": "application/json",
-    apiKey: APIKey,
-  },
+  withCredentials: true,
 })
 
 satellite.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = cookies().get(ACCESS_TOKEN)?.value
+  async (config: InternalAxiosRequestConfig) => {
+    // get access token obtained from login to be sent as authorization header in every api request
+    const token = await cookies().get(ACCESS_TOKEN)?.value
 
     if (token) {
       config.headers.Authorization = "Bearer " + token
