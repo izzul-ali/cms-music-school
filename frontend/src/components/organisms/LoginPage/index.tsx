@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import Link from "next/link"
@@ -46,8 +48,8 @@ export default function LoginPage() {
     })
 
     if (!resp?.ok || resp.error) {
-      if (resp?.error === "Incorrect email or password!") {
-        const message = "Email or Password wrong"
+      if (resp?.error === "Invalid user credentials.") {
+        const message = "Incorrect Email or Password"
         setErrorResponse({ message, type: "email_passowrd" })
         setError("password", { message, type: "onChange" })
         setError("email", { message, type: "onChange" })

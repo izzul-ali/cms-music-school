@@ -52,7 +52,12 @@ export const authOptions: NextAuthOptions = {
           if (isAxiosError(error)) {
             throw new Error(error.response?.data?.message ?? "Failed to login")
           }
-          throw error
+
+          const err = error as {
+            errors: { message: string; extensions: any }[]
+          }
+
+          throw new Error(err?.errors?.[0]?.message ?? "Failed to login")
         }
       },
     }),

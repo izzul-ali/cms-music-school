@@ -17,7 +17,7 @@ export async function GET() {
 
     if (isAxiosError(error)) {
       return Response.json(error?.response?.data ?? internalError, {
-        status: error.status,
+        status: error?.status ?? 500,
       })
     }
 
