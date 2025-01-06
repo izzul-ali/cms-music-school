@@ -1,6 +1,6 @@
 import { withAuth } from "next-auth/middleware"
 import { NextRequest, NextResponse } from "next/server"
-import { ACCESS_TOKEN } from "./interfaces/auth"
+import { ACCESS_TOKEN } from "./interfaces/auth.interface"
 
 /**
  * Middleware with next-auth
@@ -11,6 +11,7 @@ export default withAuth(
     const cookieAUth = req.cookies.get(ACCESS_TOKEN)
     const response = NextResponse.next()
 
+    // Public page
     const isNotPrivatePage = req.nextUrl.pathname.startsWith("/login")
 
     if (!cookieAUth?.value) {
@@ -21,6 +22,8 @@ export default withAuth(
       const targetPath = req.nextUrl.pathname
       const searchParams = req.nextUrl.searchParams
 
+      // Save the private URL that the user will go to when they are not authenticated.
+      // When they have successfully logged in, they will be redirected directly to the private page that they will access.
       const redirectUrl = new URL(`/login`, req.url)
 
       redirectUrl.searchParams.set("redirect", targetPath)

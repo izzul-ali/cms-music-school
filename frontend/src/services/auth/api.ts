@@ -1,6 +1,6 @@
-import { IGlobalResponse } from "@/interfaces/global"
+import { IGlobalResponse } from "@/interfaces/global.interface"
 import satellite from "../satellite"
-import { ILogin, ILoginResponse, ILogout } from "@/interfaces/auth"
+import { ILogin, ILoginResponse, ILogout } from "@/interfaces/auth.interface"
 import { API_URL } from "@/utils/environment"
 
 /**
