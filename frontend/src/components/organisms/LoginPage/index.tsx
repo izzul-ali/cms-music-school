@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import Link from "next/link"
 import * as Yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@mui/material"
 import { toast } from "react-toastify"
 import { signIn } from "next-auth/react"
@@ -24,6 +24,7 @@ export type FormLoginSchema = Yup.InferType<typeof validationSchema>
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   // Form Validation with react-hook-form
   const { handleSubmit, control, setError } = useForm<FormLoginSchema>({
@@ -61,8 +62,9 @@ export default function LoginPage() {
       return
     }
 
-    // Redirected to the dashboard page on successful login
-    router.replace("/")
+    // Directed to the dashboard page or the page that the user will go to before being authenticated
+    const redirect = searchParams.get("redirect")
+    router.replace(redirect ?? "/")
   }
 
   return (
