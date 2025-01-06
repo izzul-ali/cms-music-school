@@ -1,3 +1,5 @@
+import { IRole } from "./role.interface"
+
 export interface IUser {
   id: string | null
   first_name: string | null
@@ -12,7 +14,7 @@ export interface IUser {
   language: string | null
   tfa_secret: string | null
   status: string | null
-  role: string | null
+  role: IRole | null
   token: string | null
   last_access: string | null
   last_page: string | null
@@ -26,7 +28,21 @@ export interface IUser {
   theme_light_overrides: string | null
   theme_dark_overrides: string | null
   username: string | null
-  student_instruments: any[]
-  teacher_instruments: any[]
-  policies: any[]
+  student_instruments: number[]
+  teacher_instruments: number[]
+  policies: number[]
+}
+
+export interface ICreateUser {
+  first_name: string
+  last_name: string
+  email: string
+  password: string
+  location?: string | null
+  role: string
+  status: string
+}
+
+export interface IUpdateUser extends Omit<ICreateUser, "role"> {
+  id: string
 }

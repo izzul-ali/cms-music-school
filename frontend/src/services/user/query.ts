@@ -1,23 +1,50 @@
-import axios from "axios"
-import { useQuery } from "@tanstack/react-query"
-import { IGlobalResponse } from "@/interfaces/global"
-import { IUser } from "@/interfaces/user"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
+import { IGlobalParams } from "@/interfaces/global.interface"
+import { apiGetAllUser, apiGetTotalUsers } from "./action"
 
 /**
- * Fetches the user profile from the API.
+ * Fetches all users from the API.
+ * @param params
  * @param enable
- * @returns current login user
+ * @returns list of user
  */
-export function useGetCurrentUser(enable?: boolean) {
+export function useGetUsers(params?: IGlobalParams, enable?: boolean) {
   return useQuery({
-    queryKey: ["get-current-user"],
+    queryKey: ["get-users", params],
     queryFn: async () => {
-      const { data } = await axios.get<IGlobalResponse<IUser>>(
-        "/api/user/current"
-      )
+      const data = await apiGetAllUser(params)
+
+      if (data?.errors) {
+        throw data.errors
+      }
 
       return data
     },
     enabled: enable ?? true,
+    placeholderData: keepPreviousData,
+  })
+}
+
+/**
+ * Create a separate api request to get the total users,
+ * because directus doesn't provide the total items in the response list
+ * @param params
+ * @param enable
+ * @returns total users
+ */
+export function useGetTotalUsers(enable?: boolean) {
+  return useQuery({
+    queryKey: ["get-total-users"],
+    queryFn: async () => {
+      const data = await apiGetTotalUsers()
+
+      if (data?.errors) {
+        throw data.errors
+      }
+
+      return data
+    },
+    enabled: enable ?? true,
+    placeholderData: keepPreviousData,
   })
 }

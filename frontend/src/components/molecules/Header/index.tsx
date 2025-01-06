@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useMemo, useState } from "react"
+import React, { useState } from "react"
 import {
   Stack,
   IconButton,
@@ -14,34 +14,22 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import MenuIcon from "@mui/icons-material/Menu"
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined"
-import { signOut } from "next-auth/react"
-import { usePathname } from "next/navigation"
+import { signOut, useSession } from "next-auth/react"
 import Profile from "@/components/atoms/Profile"
-import { useGetCurrentUser } from "@/services/user/query"
 
 interface Props {
   setIsOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function Header({ setIsOpenDrawer }: Readonly<Props>) {
-  const pathname = usePathname()
+  const { data: session } = useSession()
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
   // Fetch user profile data from the API
-  const { data } = useGetCurrentUser()
-  const user = data?.data
+  const user = session?.user
   const fullname = (user?.first_name ?? "") + " " + (user?.last_name ?? "")
-
-  const formatPath = useMemo(() => {
-    const pathSegment = pathname.split("/")[2]
-    if (pathSegment)
-      return pathSegment
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (char) => char.toUpperCase())
-    return pathname.split("/")[1].toUpperCase()
-  }, [pathname])
 
   const shortName = fullname
     ?.split(" ")
@@ -77,7 +65,7 @@ export default function Header({ setIsOpenDrawer }: Readonly<Props>) {
           user={{
             fullName: fullname,
             shortName: shortName,
-            roleName: user?.role ?? "-",
+            roleName: user?.role?.name ?? "-",
             email: user?.email ?? "-",
           }}
           onLogout={() => handleLogout()}
@@ -94,7 +82,9 @@ export default function Header({ setIsOpenDrawer }: Readonly<Props>) {
           >
             <MenuIcon className="text-neutral10 text-2xl" />
           </IconButton>
-          <div className="text-sm text-white">{formatPath}</div>
+          <div className="text-sm font-semibold text-white">
+            Music School Management System
+          </div>
         </Stack>
         <div className="flex items-center gap-4">
           <Avatar
