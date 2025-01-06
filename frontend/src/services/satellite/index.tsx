@@ -1,6 +1,6 @@
 "use server"
 
-import { ACCESS_TOKEN } from "@/interfaces/auth"
+import { ACCESS_TOKEN } from "@/interfaces/auth.interface"
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
 import { cookies } from "next/headers"
 

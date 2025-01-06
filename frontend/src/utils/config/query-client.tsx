@@ -4,7 +4,7 @@ import {
   QueryCache,
   QueryClient,
 } from "@tanstack/react-query"
-import { toast } from "react-toastify"
+import { onError } from "../helpers/error"
 
 function makeQueryClient() {
   return new QueryClient({
@@ -19,16 +19,10 @@ function makeQueryClient() {
     },
     // handle errors globally by displaying a toast containing the error message
     queryCache: new QueryCache({
-      onError: (err) => {
-        console.log("t-log-query-error", err)
-        toast.error(err?.message ?? "Something wrong happend!")
-      },
+      onError: onError,
     }),
     mutationCache: new MutationCache({
-      onError: (err) => {
-        console.log("t-log-mutation-error", err)
-        toast.error(err?.message ?? "Something wrong happend!")
-      },
+      onError: onError,
     }),
   })
 }
