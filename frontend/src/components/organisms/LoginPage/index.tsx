@@ -2,7 +2,6 @@
 
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
-import Link from "next/link"
 import * as Yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -48,6 +47,7 @@ export default function LoginPage() {
       redirect: false,
     })
 
+    // Error handling
     if (!resp?.ok || resp.error) {
       if (resp?.error === "Invalid user credentials.") {
         const message = "Incorrect Email or Password"
@@ -62,9 +62,9 @@ export default function LoginPage() {
       return
     }
 
-    // Directed to the dashboard page or the page that the user will go to before being authenticated
+    // Directed to the user page or the page that the user will go to before being authenticated
     const redirect = searchParams.get("redirect")
-    router.replace(redirect ?? "/")
+    router.replace(redirect ?? "/user")
   }
 
   return (
@@ -107,11 +107,14 @@ export default function LoginPage() {
             />
 
             <div className="flex justify-end">
-              <Link href="/#" className="w-fit">
+              <button
+                type="button"
+                className="w-fit bg-transparent outline-none"
+              >
                 <p className="text-right text-xs font-semibold text-primary mt-3">
                   Forgot Password?
                 </p>
-              </Link>
+              </button>
             </div>
           </div>
 

@@ -1,3 +1,5 @@
+"use server"
+
 import { IGlobalResponse } from "@/interfaces/global.interface"
 import satellite from "../satellite"
 import { ILogin, ILoginResponse, ILogout } from "@/interfaces/auth.interface"

@@ -109,6 +109,7 @@ export const authOptions: NextAuthOptions = {
       if (token?.user) {
         const userData = token.user as IUser
 
+        // Set current user login into session
         session.user = userData
       }
 
