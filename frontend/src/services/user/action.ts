@@ -5,6 +5,7 @@ import { IGlobalParams } from "@/interfaces/global.interface"
 import { ICreateUser, IUpdateUser } from "@/interfaces/user.interface"
 import directus from "@/utils/config/directus"
 import {
+  aggregate,
   createUser,
   deleteUser,
   readMe,
@@ -40,6 +41,9 @@ export const apiGetAllUser = async (params?: IGlobalParams) => {
             status: {
               _eq: params?.status,
             },
+            role: {
+              id: { _eq: params?.role },
+            },
           },
           ...params,
         })
@@ -52,15 +56,29 @@ export const apiGetAllUser = async (params?: IGlobalParams) => {
   }
 }
 
-export const apiGetTotalUsers = async () => {
+export const apiGetTotalUsers = async (params?: IGlobalParams) => {
   try {
     const token = (await cookies().get(ACCESS_TOKEN)?.value) ?? ""
 
-    const agr = {
-      aggregate: { count: "*" },
-    } as any
-
-    const totalData = await directus.request(withToken(token, readUsers(agr)))
+    const totalData = await directus.request(
+      withToken(
+        token,
+        aggregate("directus_users", {
+          aggregate: { count: "*" },
+          query: {
+            filter: {
+              status: {
+                _eq: params?.status,
+              },
+              role: {
+                id: { _eq: params?.role },
+              },
+            },
+            ...params,
+          },
+        })
+      )
+    )
 
     return totalData?.[0]?.count ?? 0
   } catch (error) {

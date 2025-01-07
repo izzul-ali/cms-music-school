@@ -32,11 +32,11 @@ export function useGetUsers(params?: IGlobalParams, enable?: boolean) {
  * @param enable
  * @returns total users
  */
-export function useGetTotalUsers(enable?: boolean) {
+export function useGetTotalUsers(params?: IGlobalParams, enable?: boolean) {
   return useQuery({
-    queryKey: ["get-total-users"],
+    queryKey: ["get-total-users", params],
     queryFn: async () => {
-      const data = await apiGetTotalUsers()
+      const data = await apiGetTotalUsers(params)
 
       if (data?.errors) {
         throw data.errors

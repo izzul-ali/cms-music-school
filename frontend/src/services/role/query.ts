@@ -4,10 +4,10 @@ import { apiGetAllRole } from "./action"
 import { IRole } from "@/interfaces/role.interface"
 
 /**
- * Fetches all users from the API.
+ * Fetches all role from the API.
  * @param params
  * @param enable
- * @returns list of user
+ * @returns list of role
  */
 export function useGetRoles(params?: IGlobalParams, enable?: boolean) {
   return useQuery({

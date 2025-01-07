@@ -6,7 +6,6 @@ import { createColumnHelper } from "@tanstack/react-table"
 import { IUser } from "@/interfaces/user.interface"
 import { IconButton } from "@mui/material"
 import { useGetTotalUsers, useGetUsers } from "@/services/user/query"
-import { useRouter, useSearchParams } from "next/navigation"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined"
 import ModeOutlinedIcon from "@mui/icons-material/ModeOutlined"
@@ -18,20 +17,29 @@ import { FILTER_SORT_USER, FILTER_USER_STATUS } from "@/assets/data/filter"
 import PopupFormUser from "@/components/molecules/PopupFormUser"
 import { useDeleteUser } from "@/services/user/mutation"
 import { toast } from "react-toastify"
+import { useGetRoles } from "@/services/role/query"
+import { generatePaginationData } from "@/utils/helpers/pagination"
 
 type TPopupType = "create" | "view" | "edit" | "delete"
 
+/**
+ * Helper function to create column definitions for the table.
+ *
+ * `columnHelper` is an instance of the `createColumnHelper` function,
+ * which simplifies the creation of strongly-typed table columns for `IInstrument` data.
+ * It helps to define column metadata such as accessor keys, headers, and cell renderers
+ * in a type-safe manner.
+ */
 const columnHelper = createColumnHelper<IUser>()
+
+// Default filter
 const defaultParams: IGlobalParams = {
   limit: 10,
   page: 1,
-  sort: [FILTER_SORT_USER[0].value],
+  sort: [FILTER_SORT_USER[0].value], // default first_name ascending
 }
 
 export default function UserPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
   const [typePopUp, setTypePopUp] = useState<TPopupType>("create")
   const [selectedUser, setSelectedUser] = useState<IUser | undefined>()
   const [isOpenPopupFormUser, setisOpenPopupFormUser] = useState<boolean>(false)
@@ -40,9 +48,12 @@ export default function UserPage() {
   // This time I stored it in the state to make it simpler.
   const [params, setParams] = useState<IGlobalParams>(defaultParams)
 
+  // Get all role
+  const roles = useGetRoles()
+
   // Get list & total users
   const users = useGetUsers(params)
-  const totalUsers = useGetTotalUsers()
+  const totalUsers = useGetTotalUsers({ ...params, ...defaultParams })
   const deleteUser = useDeleteUser()
 
   // refresh user data after performing an action
@@ -55,7 +66,7 @@ export default function UserPage() {
   const onDeleteUser = (id: string) => {
     deleteUser.mutate(id, {
       onSuccess: () => {
-        toast.success("Successfully delete user")
+        toast.success("Successfully deleted user")
         onRefreshData()
       },
     })
@@ -88,6 +99,12 @@ export default function UserPage() {
     setSelectedUser(undefined)
   }
 
+  /**
+   * Columns Configuration for Table
+   *
+   * The `columns` variable defines the structure and behavior of each column in the table.
+   * It is created using the `useMemo` hook to optimize performance by memoizing the column definitions.
+   */
   const columns = useMemo(
     () => [
       columnHelper.accessor("id", {
@@ -161,6 +178,7 @@ export default function UserPage() {
               <ModeOutlinedIcon className="text-[20px] cursor-pointer" />
             </IconButton>
 
+            {/* It should display a confirmation popup to delete and the API call will be made when the user agrees, but for now I made it delete immediately */}
             <IconButton
               disabled={deleteUser.isPending}
               onClick={() => onDeleteUser(data.row.original.id!)}
@@ -178,6 +196,32 @@ export default function UserPage() {
     <section className="flex flex-1 flex-col gap-4 px-1 pb-10">
       <div className="flex flex-wrap justify-between gap-2">
         <div className="flex gap-4">
+          {/* Filter by role */}
+          <SelectFilter
+            data={[
+              {
+                value: "all",
+                label: "All Role",
+              },
+              ...(roles.data?.map((it) => ({
+                label: it.name!,
+                value: it.id!,
+              })) ?? []),
+            ]}
+            label="Role: "
+            htmlFor="role-filter"
+            maxWidth={300}
+            callback={(v) =>
+              setParams((prev) => ({
+                ...prev,
+                page: 1,
+                role: v === "all" ? undefined : v,
+              }))
+            }
+            values={params?.role ?? "all"}
+          />
+
+          {/* Filter by status */}
           <SelectFilter
             data={FILTER_USER_STATUS}
             label="Status: "
@@ -186,6 +230,7 @@ export default function UserPage() {
             callback={(v) =>
               setParams((prev) => ({
                 ...prev,
+                page: 1,
                 status: v === "all" ? undefined : v,
               }))
             }
@@ -203,7 +248,9 @@ export default function UserPage() {
           />
         </div>
 
-        {(params?.sort?.[0] !== defaultParams?.sort?.[0] || params?.status) && (
+        {(params?.sort?.[0] !== defaultParams?.sort?.[0] ||
+          params?.status ||
+          params?.role) && (
           <ButtonResetFilter callback={() => onResetFilter()} />
         )}
       </div>
@@ -214,13 +261,11 @@ export default function UserPage() {
         isLoading={users.isLoading || users.isFetching}
         textNew="+ New User"
         handleBtnAdd={() => openPopUp("create")}
-        paginationData={{
-          currentPage: params.page!,
-          totalPage: Math.ceil((totalUsers?.data ?? 0) / params.limit!),
-          totalRecords: totalUsers?.data ?? 0,
-          prevPage: params.page! - 1,
-          nextPage: params.page! + 1,
-        }}
+        paginationData={generatePaginationData(
+          params.page,
+          params.limit,
+          totalUsers.data
+        )}
         onSearch={(v) => setParams((prev) => ({ ...prev, page: 1, search: v }))}
         setPages={(value) => setParams((prev) => ({ ...prev, page: value }))}
         adjustColumnSize
