@@ -26,6 +26,19 @@ interface Props {
   multiple?: boolean
 }
 
+/**
+ * Reusable filter component
+ * @example
+ *  <SelectFilter
+      data={[{label: "Label", value: "Value"}]}
+      label="Sort by : "
+      htmlFor="params-sort-by"
+      defaultValue={"Value"}
+      maxWidth={185}
+      callback={(v) => setParams((prev) => ({ ...prev, sort: v }))}
+      values={"Value"}
+    />
+ */
 export default function SelectFilter({
   label,
   data,

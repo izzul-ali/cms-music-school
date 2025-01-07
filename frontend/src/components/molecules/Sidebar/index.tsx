@@ -82,10 +82,12 @@ export default function Sidebar({
   const [isNotMinimizeSidebar, setIsNotMinimizeSidebar] =
     useState<boolean>(true)
 
+  // close sidebar
   const handleDrawerClose = () => {
     setIsOpenDrawer(false)
   }
 
+  // Open sidebar
   const handleDrawerToggle = () => {
     if (isMdScreen) {
       setIsNotMinimizeSidebar((prev) => !prev)
@@ -104,7 +106,7 @@ export default function Sidebar({
     return (
       <>
         <DrawerHeader className="w-full flex justify-between items-center px-5 pt-6">
-          {isOpen && <h1 className="font-bold">CMS</h1>}
+          {isOpen && <h1 className="font-bold text-lg">CMS</h1>}
           <MenuOutlinedIcon
             className="text-3xl cursor-pointer"
             onClick={handleDrawerToggle}
@@ -135,6 +137,7 @@ export default function Sidebar({
               component="nav"
             >
               {MENU.map((menu) => {
+                // Get Actice menu
                 const isActiveMenu =
                   pathActive[pathActive.length - 1] ===
                     menu?.url?.replaceAll("/", "") ||

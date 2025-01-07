@@ -1,4 +1,3 @@
-import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined"
 import MusicVideoOutlinedIcon from "@mui/icons-material/MusicVideoOutlined"
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined"
 import CastForEducationOutlinedIcon from "@mui/icons-material/CastForEducationOutlined"
@@ -11,12 +10,6 @@ export const URL_LESSON = "/lesson"
 export const URL_PAYMENT = "/payment"
 
 export const MENU = [
-  {
-    key: "dashboard",
-    icon: <DashboardOutlinedIcon className="text-xl text-neutral80" />,
-    title: "Dashboard",
-    url: URL_DASHBOARD,
-  },
   {
     key: "instrument",
     icon: <MusicVideoOutlinedIcon className="text-xl text-neutral80" />,

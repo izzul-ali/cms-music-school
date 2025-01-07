@@ -10,7 +10,6 @@ import {
   Popover,
   Stack,
 } from "@mui/material"
-import ArrowBack from "@mui/icons-material/ArrowBack"
 import { useState } from "react"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined"
@@ -22,43 +21,29 @@ interface Props {
     roleName?: string
     email?: string
   }
-  btnBack?: boolean
   onLogout?: () => any
-  onClickBtn?: () => any
 }
 
 /**
  * Pop-up profile menu in header for dekstop version
  */
-export default function Profile({
-  user,
-  btnBack = false,
-  onLogout,
-  onClickBtn,
-}: Readonly<Props>) {
+export default function Profile({ user, onLogout }: Readonly<Props>) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
+  // Open popup
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
 
+  // Close popup
   const handleClose = () => {
     setAnchorEl(null)
   }
 
   return (
-    <section className="flex justify-between px-6 py-5 mt-3 items-center rounded-md shadow-custom1">
+    <section className="flex justify-between px-6 py-5 mt-3 items-center rounded-md shadow-custom1 bg-white">
       <Stack direction="row" spacing={2} alignItems="center">
-        {btnBack && (
-          <IconButton
-            onClick={onClickBtn}
-            className="rounded-[6px] px-2 py-[6px] bg-primary hover:opacity-90"
-          >
-            <ArrowBack className="text-neutral10 text-base" />
-          </IconButton>
-        )}
-
         <h2 className="text-base font-semibold text-primary">
           Music School Management System
         </h2>

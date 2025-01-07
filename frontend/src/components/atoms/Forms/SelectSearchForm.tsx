@@ -1,8 +1,6 @@
 import React from "react"
-import { Autocomplete, Checkbox, FormLabel, TextField } from "@mui/material"
+import { Autocomplete, FormLabel, TextField } from "@mui/material"
 import { Control, Controller } from "react-hook-form"
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank"
-import CheckBoxIcon from "@mui/icons-material/CheckBox"
 import { get } from "lodash"
 import { twMerge } from "tailwind-merge"
 
@@ -11,9 +9,6 @@ export interface IOptions {
   label: string
   disable?: boolean
 }
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />
-const checkedIcon = <CheckBoxIcon fontSize="small" />
 
 interface Props {
   label?: string
@@ -30,12 +25,14 @@ interface Props {
   onSelect?: (v: IOptions) => void
   multiple?: boolean
   maxLength?: number
-  type?: "checkbox" | "basic"
   disableCloseOnSelect?: boolean
   limitTags?: number
   loading?: boolean
 }
 
+/**
+ * Dropdown select with search and react-hook-form controller
+ */
 export default function SelectSearchForm({
   label,
   data = [],
@@ -48,19 +45,17 @@ export default function SelectSearchForm({
   onSelect,
   multiple,
   maxLength,
-  type = "basic",
   disableCloseOnSelect,
   limitTags,
   optional,
   className,
   loading,
 }: Readonly<Props>) {
-  const widthStyle = maxLength ? `w-[${maxLength}px]` : "w-full"
-
   return (
     <div
       className={twMerge(
-        `flex flex-col gap-[6px] pb-[10px] relative ${widthStyle}`,
+        "flex flex-col gap-[6px] pb-[10px] relative",
+        maxLength ? `w-[${maxLength}px]` : "w-full",
         className
       )}
     >
@@ -151,17 +146,9 @@ export default function SelectSearchForm({
                 )}
                 limitTags={limitTags}
                 disableCloseOnSelect={disableCloseOnSelect}
-                renderOption={(props, option, { selected }) => {
+                renderOption={(props, option) => {
                   return (
                     <li {...props} key={option.key}>
-                      {type === "checkbox" && (
-                        <Checkbox
-                          icon={icon}
-                          checkedIcon={checkedIcon}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                      )}
                       {option.label}
                     </li>
                   )

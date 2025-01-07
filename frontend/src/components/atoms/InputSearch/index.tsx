@@ -1,10 +1,10 @@
 "use client"
 
-import React from "react"
+import React, { useCallback, useState } from "react"
 import { InputAdornment, TextField } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
 import { debounce } from "lodash"
-import { useSearchParams } from "next/navigation"
+import CloseIcon from "@mui/icons-material/Close"
 
 interface Props {
   label?: string
@@ -13,33 +13,53 @@ interface Props {
   callback?: (txt?: string) => void
   value?: string
   fullWidth?: boolean
-  customWidth?: string | number
 }
 
+/**
+ * Input search with debound
+ * @example
+ * <InputSearch
+     disable={isLoading}
+     placeholder="Search"
+     callback={onSearch}
+   />
+ */
 function InputSearch({
   callback,
   value,
-  customWidth,
   fullWidth,
   label = "",
   placeholder = "",
   disable = false,
 }: Readonly<Props>) {
-  const searchParams = useSearchParams()
+  const [localValue, setLocalValue] = useState<string>()
+
+  const onSetValue = (v?: string) => {
+    if (callback) callback(v)
+    setLocalValue(v)
+  }
+
+  const onChangeWithDebounce = useCallback(
+    debounce((e) => {
+      if (callback) callback(e.target.value)
+    }, 1000),
+    []
+  )
 
   return (
     <TextField
       disabled={disable}
-      onChange={debounce((e) => {
-        if (callback) callback(e.target.value)
-      }, 1000)}
-      value={value}
+      onChange={(e) => {
+        setLocalValue(e.target.value)
+        onChangeWithDebounce(e)
+      }}
+      value={value ?? localValue}
+      defaultValue={localValue}
       label={label}
       id="outlined-start-adornment"
       placeholder={placeholder}
-      defaultValue={searchParams.get("search") ?? ""}
       sx={{
-        width: fullWidth ? "100%" : customWidth ?? 320,
+        width: fullWidth ? "100%" : 320,
         "& .MuiInputBase-root": {
           paddingLeft: "12px",
           borderRadius: 2,
@@ -54,7 +74,14 @@ function InputSearch({
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
-            <SearchIcon sx={{ color: "#404040", fontSize: 20 }} />
+            {localValue ? (
+              <CloseIcon
+                onClick={() => onSetValue("")}
+                sx={{ color: "#404040", fontSize: 20, cursor: "pointer" }}
+              />
+            ) : (
+              <SearchIcon sx={{ color: "#404040", fontSize: 20 }} />
+            )}
           </InputAdornment>
         ),
       }}

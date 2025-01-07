@@ -29,7 +29,7 @@ interface Props extends OutlinedInputProps {
 }
 
 /**
- * @returns Password Input Form
+ * @returns Password Input Form with react-hook-form controller
  */
 export default function PasswordInputForm({
   label,

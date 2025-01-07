@@ -2,6 +2,7 @@ import React, { HTMLProps } from "react"
 import { FormLabel, OutlinedInput } from "@mui/material"
 import { Control, Controller } from "react-hook-form"
 import { get } from "lodash"
+import { twMerge } from "tailwind-merge"
 
 interface Props extends HTMLProps<HTMLDivElement> {
   label?: string
@@ -34,10 +35,13 @@ export default function TextInputForm({
   isRequired,
   onChangeInput,
 }: Readonly<Props>) {
-  const widthStyle = maxLength ? `w-[${maxLength}px]` : "w-full"
-
   return (
-    <div className={`flex flex-col gap-[6px] pb-[10px] relative ${widthStyle}`}>
+    <div
+      className={twMerge(
+        "flex flex-col gap-[6px] pb-[10px] relative",
+        maxLength ? `w-[${maxLength}px]` : "w-full"
+      )}
+    >
       <Controller
         defaultValue={defaultValue}
         control={control}
@@ -72,7 +76,7 @@ export default function TextInputForm({
               type={type ?? "text"}
               onChange={(e) => {
                 field.onChange(e.currentTarget.value)
-                onChangeInput && onChangeInput(e.currentTarget.value)
+                if (onChangeInput) onChangeInput(e.currentTarget.value)
               }}
               inputProps={{ name: htmlFor, id: htmlFor, min, max }}
               sx={{

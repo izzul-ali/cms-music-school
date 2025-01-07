@@ -25,7 +25,7 @@ interface Props extends OutlinedInputProps {
 }
 
 /**
- * @returns Email Input Form
+ * @returns Email Input Form with react-hook-form controller
  */
 export default function EmailInputForm({
   label,

@@ -27,7 +27,7 @@ export default function Header({ setIsOpenDrawer }: Readonly<Props>) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
-  // Fetch user profile data from the API
+  // Get current user from session
   const user = session?.user
   const fullname = (user?.first_name ?? "") + " " + (user?.last_name ?? "")
 

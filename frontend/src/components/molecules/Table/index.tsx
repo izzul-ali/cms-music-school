@@ -1,9 +1,8 @@
 "use client"
 
-import React, { Fragment, ReactNode, useEffect, useMemo, useState } from "react"
+import React, { Fragment, useEffect, useMemo, useState } from "react"
 import {
   Column,
-  ExpandedState,
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
@@ -15,9 +14,6 @@ import { Button, Pagination, PaginationItem, Stack } from "@mui/material"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import LoaderTable from "./LoaderTable"
-import { useSearchParams } from "next/navigation"
-import SearchIcon from "@mui/icons-material/Search"
-// import { IPagination } from "@interfaces/api"
 import Image from "next/image"
 import InputSearch from "@/components/atoms/InputSearch"
 import { twMerge } from "tailwind-merge"
@@ -32,24 +28,41 @@ interface Props {
   isLoading?: boolean
   paginationData?: IPagination
   setPages?: (p: any) => void
-  valueFilter?: string
   onSearch?: (text?: string) => void
-  onChangeFilter?: (e: any) => void
   isHasSearch?: boolean
-  isHasFilter?: boolean
   isDisabledPagination?: boolean
-  isHasTitle?: boolean
-  isHasActionButton?: boolean
   handleBtnAdd?: () => any
   handleBtnSubmit?: () => any
-  handleBtnCancel?: () => any
-  expandable?: ExpandedState
-  subRowName?: string
-  customLeftComponent?: ReactNode
-  customRightComponent?: ReactNode
   multiplePage?: number
 }
 
+/**
+ * Reusable Table Component
+ *
+ * A flexible and reusable table component built using `@tanstack/react-table`.
+ * This component accepts dynamic columns and data, making it adaptable for various use cases.
+ * It supports pagination, and customizable cell rendering.
+ *
+ * @component
+ * @param {Array} data - The array of data objects to be displayed in the table.
+ * @param {Array} columns - The array of column definitions created using `createColumnHelper`.
+ * @example
+ * <Table
+    columns={columns}
+    data={users?.data ?? []}
+    isLoading={users.isLoading || users.isFetching}
+    textNew="+ New User"
+    handleBtnAdd={() => openPopUp("create")}
+    paginationData={generatePaginationData(
+      params.page,
+      params.limit,
+      totalUsers.data
+    )}
+    onSearch={(v) => setParams((prev) => ({ ...prev, page: 1, search: v }))}
+    setPages={(value) => setParams((prev) => ({ ...prev, page: value }))}
+    adjustColumnSize
+  />
+ */
 export default function Table({
   data = [],
   columns,
@@ -62,12 +75,8 @@ export default function Table({
   isDisabledPagination = false,
   isHasSearch = true,
   handleBtnAdd,
-  customLeftComponent,
-  customRightComponent,
   multiplePage = 10,
 }: Readonly<Props>) {
-  const searchParams = useSearchParams()
-
   const [currentPage, setCurrentPage] = useState<number>(1)
 
   useEffect(() => {
@@ -85,6 +94,7 @@ export default function Table({
     getExpandedRowModel: getExpandedRowModel(),
   })
 
+  // Generate table header
   const headerCustom: any = useMemo(() => {
     if (table.getHeaderGroups().length > 1) {
       const tempColumns: Column<unknown, unknown>[] = []
@@ -147,31 +157,29 @@ export default function Table({
       )}
     >
       <div className="rounded-md overflow-auto shadow-custom2">
-        {customLeftComponent || isHasSearch || textNew ? (
+        {isHasSearch || textNew ? (
           <div className="flex justify-between gap-3 p-6 overflow-auto bg-neutral10 rounded-t-xl flex-wrap">
             <div className="flex gap-6 justify-between items-center flex-1">
-              {customLeftComponent}
-
-              <div className="flex items-center gap-3 w-fit">
-                {customLeftComponent && customRightComponent}
+              <div className="flex items-center gap-3 w-full md:w-fit">
                 {isHasSearch && (
                   <InputSearch
                     disable={isLoading}
                     placeholder="Search"
+                    fullWidth
                     callback={onSearch}
                   />
                 )}
               </div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 w-full md:w-fit">
               {textNew && (
                 <Button
                   onClick={() => handleBtnAdd && handleBtnAdd()}
                   type="button"
                   variant="contained"
                   color="primary"
-                  className="whitespace-nowrap h-fit px-3 py-2"
+                  className="whitespace-nowrap h-fit px-3 py-2 w-full md:w-fit"
                 >
                   {textNew}
                 </Button>
@@ -266,22 +274,7 @@ export default function Table({
           </div>
         )}
 
-        {data?.length == 0 && searchParams.get("search") && (
-          <Stack alignItems="center" spacing={2} className="bg-neutral10">
-            <div className="bg-[#F6E8B5] h-12 w-12 border-[8px] border-[#FFFDE5] rounded-[28px] flex items-center justify-center">
-              <SearchIcon sx={{ color: "#B18602" }} />
-            </div>
-            <div className="flex flex-col items-center gap-3 pb-12 text-sm">
-              <h2 className="text-neutral90 font-semibold">{`Sorry!, No result found for “${searchParams.get(
-                "search"
-              )}”`}</h2>
-              <p className="text-neutral70">
-                Maybe you can try again with another keyword
-              </p>
-            </div>
-          </Stack>
-        )}
-        {data?.length == 0 && !searchParams.get("search") && (
+        {data?.length == 0 && (
           <Stack alignItems="center" spacing={2} className="bg-neutral10 p-6">
             <Image
               src="/images/not-found.png"
