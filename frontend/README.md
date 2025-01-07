@@ -35,8 +35,15 @@ Run the development server:
 ```bash
 # please use nodejs version 20
 
+# 1. create a .env file in the root folder and add the following variables
+NEXT_PUBLIC_API_URL=http://localhost:8055
+NEXTAUTH_SECRET="pbBtu9nXd7Q6eCTbwf7MmTwSPkYgGSbfOzOpEDoIp7w="
+NEXTAUTH_URL=http://localhost:3000
+
+# 2
 npm i
 
+# 3
 npm run dev
 ```
 
