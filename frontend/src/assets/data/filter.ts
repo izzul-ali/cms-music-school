@@ -20,3 +20,36 @@ export const FILTER_SORT_USER = [
     label: "Descending",
   },
 ]
+
+export const FILTER_SORT_PAYMENT_DATE = [
+  {
+    value: "payment_date",
+    label: "Ascending",
+  },
+  {
+    value: "-payment_date",
+    label: "Descending",
+  },
+]
+
+export const FILTER_SORT_LESSON_START_DATE = [
+  {
+    value: "start_datetime",
+    label: "Ascending",
+  },
+  {
+    value: "-start_datetime",
+    label: "Descending",
+  },
+]
+
+export const FILTER_SORT_INSTRUMENT = [
+  {
+    value: "name",
+    label: "Ascending",
+  },
+  {
+    value: "-name",
+    label: "Descending",
+  },
+]
