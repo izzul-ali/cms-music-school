@@ -2,6 +2,8 @@
 export interface IGlobalParams {
   search?: string
   status?: string
+  package?: string
+  role?: string
   sort?: string[]
   page?: number
   limit?: number
