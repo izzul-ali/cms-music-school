@@ -23,3 +23,16 @@ Designed for administrators, the platform provides tools for managing both stude
 
 #### 5. Payment
 * View Payments list with filter query
+
+## How to run
+```
+1. run directus from the /directus folder
+2. run the web frontend by following the steps in the /frontend folder
+```
+
+## Preview
+<img width="1440" alt="Screenshot 2025-01-07 at 09 50 43" src="https://github.com/user-attachments/assets/bb126875-2480-4066-8970-ea377a3dfbfd" />
+
+<img width="1437" alt="Screenshot 2025-01-07 at 09 50 00" src="https://github.com/user-attachments/assets/be8769cd-bd30-4aca-8b0a-f46b1a52f8e6" />
+
+<img width="1438" alt="Screenshot 2025-01-07 at 09 50 12" src="https://github.com/user-attachments/assets/33abf9e8-7cac-4f4b-949d-3daf50ea1397" />
