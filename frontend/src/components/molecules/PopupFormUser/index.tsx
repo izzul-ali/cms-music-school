@@ -5,12 +5,10 @@ import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import {
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
-  styled,
 } from "@mui/material"
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined"
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined"
@@ -20,23 +18,14 @@ import { ICreateUser, IUpdateUser, IUser } from "@/interfaces/user.interface"
 import PasswordInputForm from "@/components/atoms/Forms/PasswordInputForm"
 import EmailInputForm from "@/components/atoms/Forms/EmailInputForm"
 import TextInputForm from "@/components/atoms/Forms/TextInputForm"
-import SelectSearchForm, {
-  IOptions,
-} from "@/components/atoms/Forms/SelectSearchForm"
+import SelectSearchForm from "@/components/atoms/Forms/SelectSearchForm"
 import { useCreateUser, useUpdateUser } from "@/services/user/mutation"
 import { STATUS_USER } from "@/assets/data/global"
 import { toast } from "react-toastify"
 import { useGetRoles } from "@/services/role/query"
+import CustomDialog from "@/components/atoms/CustomDialog"
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}))
-
+// Validation schema
 export const formUserSchema = yup.object({
   firstName: yup.string().required("Must fill!"),
   lastName: yup.string().required("Must fill!"),
@@ -72,6 +61,9 @@ interface Props {
   refresh: () => void
 }
 
+/**
+ * Reusable popup component for creating, updating, and viewing user
+ */
 export default function PopupFormUser({
   isOpen,
   onClose,
@@ -103,6 +95,7 @@ export default function PopupFormUser({
     setShowPassword((prevShowPassword) => !prevShowPassword)
   }
 
+  // Set user data into form
   useEffect(() => {
     if (selectedData && process === "edit") {
       setValue("firstName", selectedData.first_name!)
@@ -116,6 +109,7 @@ export default function PopupFormUser({
     }
   }, [selectedData])
 
+  // Close popup and reset form
   const closePopUp = () => {
     onClose()
     reset()
@@ -133,6 +127,7 @@ export default function PopupFormUser({
         status: watch("status"),
       }
 
+      // Refresh api get list user then close the popup
       createUser.mutate(create, {
         onSuccess: () => {
           toast.success("Successfully added new user")
@@ -150,8 +145,8 @@ export default function PopupFormUser({
         location: watch("location"),
         status: watch("status"),
       }
-      console.log("t-log-update", edit)
 
+      // Refresh api get list user then close the popup
       updateUser.mutate(edit, {
         onSuccess: () => {
           toast.success("Successfully updated user")
@@ -173,8 +168,9 @@ export default function PopupFormUser({
       <p className="text-sm text-neutral90 font-medium break-all">{value}</p>
     </div>
   )
+
   return (
-    <BootstrapDialog
+    <CustomDialog
       onClose={closePopUp}
       open={isOpen}
       fullWidth
@@ -185,7 +181,11 @@ export default function PopupFormUser({
       }}
     >
       <DialogTitle sx={{ m: 0, p: 2 }} className="text-lg">
-        {process === "edit" ? "Update User" : "Create User"}
+        {process === "edit"
+          ? "Update User"
+          : process === "create"
+          ? "Create User"
+          : "User Detail"}
       </DialogTitle>
       <IconButton
         aria-label="close"
@@ -202,7 +202,7 @@ export default function PopupFormUser({
       <DialogContent dividers>
         {process == "view" ? (
           <div>
-            <div className="grid gap-4 mb-2 grid-cols-2">
+            <div className="grid gap-4 md:mb-2 grid-cols-1 md:grid-cols-2">
               <div className="">
                 {renderFieldInfo(
                   "Full Name",
@@ -212,7 +212,7 @@ export default function PopupFormUser({
                 {renderFieldInfo("Email Address", selectedData?.email ?? "-")}
               </div>
 
-              <div className=" w-fit ml-10">
+              <div className="w-fit md:ml-10">
                 <div className="col-span-2 mb-3">
                   <label
                     htmlFor="name"
@@ -302,6 +302,7 @@ export default function PopupFormUser({
                 label="Last Name"
               />
 
+              {/* do not allow to change roles when updating users, because directus does not provide it */}
               <SelectSearchForm
                 data={
                   roles?.data
@@ -317,6 +318,7 @@ export default function PopupFormUser({
                 defaultValue={watch("roleAccess")}
                 placeholder="- Choose -"
                 name="roleAccess"
+                isDisabled={process === "edit" || roles.isLoading}
                 isRequired
               />
 
@@ -380,6 +382,6 @@ export default function PopupFormUser({
           )}
         </div>
       </DialogActions>
-    </BootstrapDialog>
+    </CustomDialog>
   )
 }
